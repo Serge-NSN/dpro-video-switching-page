@@ -16,7 +16,7 @@ function getData() {
         }
       }
     }
-    request.open("GET", "../ajax.json");
+    request.open("GET", "ajax.json");
     
     request.responseType = "json";
     request.send(null);
