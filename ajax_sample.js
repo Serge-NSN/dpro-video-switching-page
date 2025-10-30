@@ -1,47 +1,40 @@
-let number = 0;
-let data = []; // Stores the data retrieved from ajax.json
+let number = 0; 
+data=[];
+const titleArea = document.getElementById("title"); 
+const contentArea = document.getElementById("content"); 
+const videoArea = document.getElementById("video"); 
+const button = document.getElementById('btn'); 
 
-const button = document.getElementById('btn');
-const titleArea = document.getElementById("title");
-const contentArea = document.getElementById("content");
-const videoArea = document.getElementById("video");
-
-// Function to retrieve data from ajax.json
-function getData(callback) {
-  const request = new XMLHttpRequest();
-  request.onreadystatechange = function() {
-    if (request.readyState === 4 && request.status === 200) {
-      data = request.response; // Save data locally to reuse later
-      callback(); // Proceed to show first video
+function getData() {
+  
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if (request.readyState == 4) {
+        if (request.status == 200) {
+            data = request.response;
+            changeVideo();
+        }
+      }
     }
-  };
-  request.open("GET", "ajax.json");
-  request.responseType = "json";
-  request.send(null);
+    request.open("GET", "../ajax.json");
+    
+    request.responseType = "json";
+    request.send(null);
+  
 }
 
-// Function to handle button clicks and update video content
 function changeVideo() {
-  button.addEventListener('click', () => {
-    // Load from server only once
+    button.addEventListener("click", () => {
     if (data.length === 0) {
-      getData(updateContent);
-    } else {
-      updateContent();
+      getData();
+      return;
     }
-  });
+    titleArea.innerHTML = data[number].title;   
+    contentArea.innerHTML = data[number].content;   
+    videoArea.setAttribute("src", data[number].url);   
+    number == 2 ? number = 0 : number++;
+    });
 }
 
-// Function to update the displayed video info
-function updateContent() {
-  if (data.length > 0) {
-    titleArea.innerHTML = data[number].title;
-    contentArea.innerHTML = data[number].content;
-    videoArea.setAttribute("src", data[number].url);
-
-    // Loop back to the first video after the last
-    number = (number + 1) % data.length;
-  }
-}
 
 window.onload = changeVideo;
